@@ -1,0 +1,27 @@
+## GDLDatabase - Класс для управления базой данных
+
+## Авторские права:
+* Copiright (c) 2000-2012, Gold Dragon
+* email: illusive@bk.ru
+* www: http://gdlotos.ru
+
+## Требования:
+* php > 5.3
+* mysql >  5.1
+* расширения php - php_mysql.dll, php_mysqli.dll
+
+## Документация по исходному коду проекта и использованию API
+* Статичная документация: http://wiki.gdlotos.ru/GDLDatabase
+* Поддержка: http://forum.gdlotos.ru
+
+
+## Файловая структура системы:
+```
+database.php - класс для управления базой данных
+dbconfig.ini - файл с настройками базы данных
+dbconfig.php - файл для подключения базы данных и дополнительными настройками
+index.php - файл с примерами использования
+```
+
+## Лицензия
+GNU GPL: http://www.gnu.org/licenses/gpl-3.0.html.
