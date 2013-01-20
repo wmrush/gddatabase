@@ -169,7 +169,7 @@ class GDDatabase
 
         // записываем логи запросов
         if ($this->_db_debug) {
-            $this->db_resource->query('set profiling=1.php');
+            $this->db_resource->query('set profiling=1');
             $this->db_resource->query('set profiling_history_size=100');
         }
     }
