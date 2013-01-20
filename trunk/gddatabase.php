@@ -144,7 +144,7 @@ class GDDatabase
 
         // Временно отключаем вывод ошибок
         $_error = error_reporting();
-        error_reporting(-1);
+        error_reporting(0);
 
         // Создаём объект базы
         $this->db_resource = new mysqli(
@@ -849,9 +849,6 @@ class GDDatabase
         $result = $this->db_resource->query("show profiles");
         return $result->fetch_all();
     }
-
-    ///******************* getQueryInfo
-
 
     /**
      * Возвращает ошибку
