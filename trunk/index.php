@@ -13,7 +13,8 @@
             font-size: 16pt;
             color: #900;
         }
-        .h2{
+
+        .h2 {
             font-weight: normal;
             font-size: 80%;
         }
@@ -49,20 +50,20 @@
     <h2>Дамп тестовой таблицы</h2>
 <pre>
     <code class="sql">
-CREATE DATABASE IF NOT EXISTS gddatabase;
-USE gddatabase;
+        CREATE DATABASE IF NOT EXISTS gddatabase;
+        USE gddatabase;
 
-CREATE TABLE IF NOT EXISTS gd_table (
-    id int(10) NOT NULL AUTO_INCREMENT,
-    name_t varchar(50) DEFAULT '0',
-    date_t date DEFAULT NULL,
-PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        CREATE TABLE IF NOT EXISTS gd_table (
+        id int(10) NOT NULL AUTO_INCREMENT,
+        name_t varchar(50) DEFAULT '0',
+        date_t date DEFAULT NULL,
+        PRIMARY KEY (id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO gd_table (id, name_t, date_t) VALUES
-    (1, 'Иван', '2012-11-04'),
-    (2, 'Степан', '2012-11-06'),
-    (3, 'Пётр', '2012-11-07');
+        INSERT INTO gd_table (id, name_t, date_t) VALUES
+        (1, 'Иван', '2012-11-04'),
+        (2, 'Степан', '2012-11-06'),
+        (3, 'Пётр', '2012-11-07');
     </code>
 </pre>
 </div>
@@ -74,6 +75,7 @@ INSERT INTO gd_table (id, name_t, date_t) VALUES
 
 <div>
     <h2>Подключение</h2>
+
     <h3>Подключаем файл с константами</h3>
     <pre><code class="php">require_once('gddbdefine.php');</code></pre>
     <h3>Подключаем сам класс</h3>
@@ -84,247 +86,368 @@ INSERT INTO gd_table (id, name_t, date_t) VALUES
 
     <!--------------------------------------------------------------------------------------->
 
-    <?php $result = GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан')); ?>
-
     <div>
         <h2>select() - <span class="h2">Вывод всех значений</span></h2>
 
         <h3>Пример:</h3>
-        <pre><code class="php">
+        <pre>
+            <code class="php">
 $sql = "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?";
 $result = GDDatabase::Init()->select($sql, 1, 'Степан');
-        </code></pre>
-или
-        <pre><code class="php">
+            </code>
+        </pre>
+        или
+        <pre>
+            <code class="php">
 $sql = "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?";
 $result = GDDatabase::Init()->select($sql, array(1, 'Степан'));
-        </code></pre>
+            </code>
+        </pre>
 
         <h3>Результат:</h3>
+        <?php $result = GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан')); ?>
         <pre><code><?php print_r($result); ?></code></pre>
     </div>
 
     <!--------------------------------------------------------------------------------------->
-
-    <?php $result = GDDatabase::Init()->selectRow("SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан')); ?>
 
     <div>
         <h2>selectRow() - <span class="h2">Вывод первой строки</span></h2>
 
         <h3>Пример:</h3>
-        <pre><code class="php">
+        <pre>
+            <code class="php">
 $sql = "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?";
 $result = GDDatabase::Init()->selectRow($sql, 1, 'Степан');
-        </code></pre>
+            </code>
+        </pre>
         или
-        <pre><code class="php">
+        <pre>
+            <code class="php">
 $sql = "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?";
 $result = GDDatabase::Init()->selectRow($sql, array(1, 'Степан'));
-        </code></pre>
+            </code>
+        </pre>
         <h3>Результат:</h3>
+        <?php $result = GDDatabase::Init()->selectRow("SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан')); ?>
         <pre><code><?php print_r($result); ?></code></pre>
     </div>
 
     <!--------------------------------------------------------------------------------------->
 
-    <?php $result = GDDatabase::Init()->selectCol("SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан')); ?>
     <div>
         <h2>selectCol() - <span class="h2">Вывод первого столбца запроса</span></h2>
 
         <h3>Пример:</h3>
-        <pre><code class="php">
+        <pre>
+            <code class="php">
 $sql = "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?";
 $result = GDDatabase::Init()->selectCol($sql, 1, 'Степан');
-            </code></pre>
+            </code>
+        </pre>
         или
-        <pre><code class="php">
+        <pre>
+            <code class="php">
 $sql = "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?";
-$result = GDDatabase::Init()->selectCol($sql, array(1, 'Степан'));';
-            </code></pre>
+$result = GDDatabase::Init()->selectCol($sql, array(1, 'Степан'));
+            </code>
+        </pre>
         <h3>Результат:</h3>
+        <?php $result = GDDatabase::Init()->selectCol("SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан')); ?>
         <pre><code><?php print_r($result); ?></code></pre>
     </div>
 
 
     <!--------------------------------------------------------------------------------------->
 
-    <?php $result = GDDatabase::Init()->selectCell("SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан')); ?>
     <div>
         <h2>selectCell() - <span class="h2">Вывод первой ячейки первого столбца запроса</span></h2>
 
-        <h3>Пример:</h3><pre><code class="php">
+        <h3>Пример:</h3>
+        <pre>
+            <code class="php">
 $sql = "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?";
 $result = GDDatabase::Init()->selectCell($sql, 1, 'Степан');
-            </code></pre>
+            </code>
+        </pre>
         или
-        <pre><code class="php">
+        <pre>
+            <code class="php">
 $sql = "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?";
 $result = GDDatabase::Init()->selectCell($sql, array(1, 'Степан'));
-            </code></pre>
+            </code>
+        </pre>
         <h3>Результат:</h3>
+        <?php $result = GDDatabase::Init()->selectCell("SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан')); ?>
         <pre><code><?php print_r($result); ?></code></pre>
     </div>
 
     <!--------------------------------------------------------------------------------------->
 
-    <?php $result = GDDatabase::Init()->update("UPDATE #__table SET date_t=? WHERE  id=? AND name_t=?", array('2012-11-07', 3, 'Пётр')); ?>
+    <div>
+        <h2>getCacheSql() - <span class="h2">Вывод всех значений (метод <b>selectRow</b>) при использовании кэширования</span></h2>
+
+        <h3>Пример:</h3>
+        <pre>
+            <code class="php">
+$sql = "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?";
+$result = GDDatabase::Init()->getCacheSql("selectRow", $sql , 1, 'Степан');
+            </code>
+        </pre>
+        или
+        <pre>
+            <code class="php">
+$sql = "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?";
+$result = GDDatabase::Init()->getCacheSql("selectRow", $sql, array(1, 'Степан'));
+            </code>
+        </pre>
+        <h3>Результат:</h3>
+        <?php $result = GDDatabase::Init()->getCacheSql('selectRow', "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан')); ?>
+        <pre><code><?php print_r($result); ?></code></pre>
+    </div>
+
+    <!--------------------------------------------------------------------------------------->
+
     <div>
         <h2>update() - <span class="h2">Обновление записи</span></h2>
 
         <h3>Пример:</h3>
-<pre><code class="php">
+        <pre>
+            <code class="php">
 $sql = "UPDATE #__table SET date_t=? WHERE id=? AND name_t=?";
 $result = GDDatabase::Init()->update($sql, array('2012-11-07', 3, 'Пётр'));
-    </code></pre>
+            </code>
+        </pre>
         или
-<pre><code class="php">
+        <pre>
+            <code class="php">
 $sql = "UPDATE #__table SET date_t=? WHERE id=? AND name_t=?";
 $result = GDDatabase::Init()->update($sql, '2012-11-07', 3, 'Пётр');
-    </code></pre>
+            </code>
+        </pre>
     </div>
 
-
-
-    <?php
-    /*
     <!--------------------------------------------------------------------------------------->
 
-    $result = GDDatabase::Init()->insert("INSERT INTO #__table (id, name_t, date_t) VALUES (?, ?, ?);", array(4, 'Антон', '2012-11-07'));
-    echo '<div><h2>insert()</h2>Вставка записи';
-    echo '<h3>Пример:</h3>';
-    echo '$result = GDDatabase::Init()->insert("INSERT INTO #__table (id, name_t, date_t) VALUES (?, ?, ?);", array(4, 'Антон', '2012-11-07'));<br />';
-    echo 'или<br />';
-    echo '$result = GDDatabase::Init()->insert("INSERT INTO #__table (id, name_t, date_t) VALUES (?, ?, ?);", 4, 'Антон', '2012-11-07');';
-    echo '</div>';
+    <div>
+        <h2>insert() - <span class="h2">Вставка записи</span></h2>
 
-    <!--------------------------------------------------------------------------------------->
-
-    $result = GDDatabase::Init()->replace("REPLAСE INTO #__table (id, name_t, date_t) VALUES (?, ?, ?);", array(4, 'Антон', '2012-11-07'));
-    echo '<div><h2>replace()</h2>Перезапись записи';
-    echo '<h3>Пример:</h3>';
-    echo '$result = GDDatabase::Init()->replace("REPLAСE INTO #__table (id, name_t, date_t) VALUES (?, ?, ?);", array(4, 'Антон', '2012-11-07'));<br />';
-    echo 'или<br />';
-    echo '$result = GDDatabase::Init()->replace("REPLAСE INTO #__table (id, name_t, date_t) VALUES (?, ?, ?);", 4, 'Антон', '2012-11-07');';
-    echo '</div>';
-
-     <!--------------------------------------------------------------------------------------->
-
-   $result = GDDatabase::Init()->delete("DELETE FROM #__table WHERE  id=? AND name_t=?", array(4, 'Антон'));
-    echo '<div><h2>delete()</h2>Удаление записи';
-    echo '<h3>Пример:</h3>';
-    echo '$result = GDDatabase::Init()->delete("DELETE FROM #__table WHERE  id=? AND name_t=?", array(4, 'Антон'));<br />';
-    echo 'или<br />';
-    echo '$result = GDDatabase::Init()->delete("DELETE FROM #__table WHERE  id=? AND name_t=?", 4, 'Антон');';
-    echo '</div>';
+        <h3>Пример:</h3>
+        <pre>
+            <code class="php">
+$sql = "INSERT INTO #__table (id, name_t, date_t) VALUES (?, ?, ?);";
+$result = GDDatabase::Init()->insert($sql, array(4, 'Антон', '2012-11-07'));
+            </code>
+        </pre>
+        или
+        <pre>
+            <code class="php">
+$sql = "INSERT INTO #__table (id, name_t, date_t) VALUES (?, ?, ?);";
+$result = GDDatabase::Init()->insert($sql, 4, 'Антон', '2012-11-07');
+            </code>
+        </pre>
+    </div>
 
     <!--------------------------------------------------------------------------------------->
 
-    $result = GDDatabase::Init()->getCacheSql('selectRow', "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан'));
-    echo '<div><h2>getCacheSql()</h2>Вывод всех значений (метод <b>selectRow</b>) при использовании кэширования';
-    echo '<h3>Пример:</h3>';
-    echo '$result = GDDatabase::Init()->getCacheSql("selectRow", "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", 1, 'Степан');<br />';
-    echo 'или<br />';
-    echo '$result = GDDatabase::Init()->getCacheSql("selectRow", "SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", array(1, 'Степан'));';
-    echo '<h3>Результат:</h3>';
-    <pre><code><?php print_r($result); ?></code></pre>
+    <div>
+        <h2>replace() - <span class="h2">Перезапись записи</span></h2>
 
-    echo '<div><h2>Транзакция</h2>';
-    echo '<h3>Использование транзакции:</h3>';
-    echo '$db=GDDatabase::Init();
-          <br>$db->transactionStart();
-          <br>$db->insert('INSERT INTO #__table set testval =?',20);
-          <br>$db->insert('INSERT INTO #__table set testval =?',10);
-          <br>$db->insert('INSERT INTO #__table set testval =?',123);
-          <br>$db->transactionCommit();';
-
-    echo '<h3>Откат текущей транзакции:</h3>';
-    echo '$db=GDDatabase::Init();
-          <br>$db->transactionStart();
-          <br>$db->insert('INSERT INTO #__table set testval =?',20);
-          <br>$db->insert('INSERT INTO #__table set testval =?',10);
-          <br>$db->insert('INSERT INTO #__table set testval =?',123);
-          <br>$db->transactionRollBack();
-          <br>$db->transactionCommit();';
-    echo '</div>';
+        <h3>Пример:</h3>
+        <pre>
+            <code class="php">
+$sql = "REPLAСE INTO #__table (id, name_t, date_t) VALUES (?, ?, ?);"
+$result = GDDatabase::Init()->replace($sql, array(4, 'Антон', '2012-11-07'));
+            </code>
+        </pre>
+        или
+        <pre>
+            <code class="php">
+$sql = "REPLAСE INTO #__table (id, name_t, date_t) VALUES (?, ?, ?);"
+$result = GDDatabase::Init()->replace($sql, 4, 'Антон', '2012-11-07');
+            </code>
+        </pre>
+    </div>
 
     <!--------------------------------------------------------------------------------------->
 
-    $result = GDDatabase::Init()->simpleQuery("SELECT id, name_t, date_t FROM #__table WHERE id=1 OR name_t= 'Степан'");
-    echo '<div><h2>simpleQuery()</h2>Простое выполнение запроса';
-    echo '<h3>Пример:</h3>';
-    echo '$result = GDDatabase::Init()->simpleQuery("SELECT id, name_t, date_t FROM #__table WHERE id=? OR name_t=?", 1, 'Степан');<br />';
-    echo '<h3>Результат:</h3>';
-    <pre><code><?php print_r($result); ?></code></pre>
+    <div>
+        <h2>delete() - <span class="h2">Удаление записи</span></h2>
+
+        <h3>Пример:</h3>
+        <pre>
+            <code class="php">
+$sql = "DELETE FROM #__table WHERE id=? AND name_t=?";
+$result = GDDatabase::Init()->delete($sql, array(4, 'Антон'));
+            </code>
+        </pre>
+        или
+        <pre>
+            <code class="php">
+$sql = "DELETE FROM #__table WHERE id=? AND name_t=?";
+$result = GDDatabase::Init()->delete($sql, 4, 'Антон');
+            </code>
+        </pre>
+    </div>
 
     <!--------------------------------------------------------------------------------------->
 
-    GDDatabase::Init()->insert("INSERT INTO #__table (name_t, date_t) VALUES (?, ?);", array('Елена', '2012-10-07'));
-    $result1 = GDDatabase::Init()->getQueryInfo();
-    GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id>?", 6);
-    $result2 = GDDatabase::Init()->getQueryInfo();
-    echo '<div><h2>getQueryInfo()</h2>Получение дополнительной информации о последнем запросе';
-    echo '<h3>Пример:</h3>';
-    echo 'GDDatabase::Init()->insert("INSERT INTO #__table (name_t, date_t) VALUES (?, ?);", array('Елена', '2012-10-07'));<br>';
-    echo '$result1 = GDDatabase::Init()->getQueryInfo();<br /><br />';
-    echo 'GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id>?, 6);<br>';
-    echo '$result2 = GDDatabase::Init()->getQueryInfo();<br />';
-    echo '<h3>Результат:</h3>';
-    echo '<pre>';
-    print_r($result1);
-    print_r($result2);
-    echo '</pre></div>';
+    <div><h2>Транзакция</h2>
+
+        <h3>Использование транзакции:</h3>
+        <pre>
+            <code class="php">
+$db=GDDatabase::Init();
+$db->transactionStart();
+$db->insert('INSERT INTO #__table set testval =?',20);
+$db->insert('INSERT INTO #__table set testval =?',10);
+$db->insert('INSERT INTO #__table set testval =?',123);
+$db->transactionCommit();
+            </code>
+        </pre>
+
+        <h3>Откат текущей транзакции:</h3>
+        <pre>
+            <code class="php">
+$db=GDDatabase::Init();
+$db->transactionStart();
+$db->insert('INSERT INTO #__table set testval =?',20);
+$db->insert('INSERT INTO #__table set testval =?',10);
+$db->insert('INSERT INTO #__table set testval =?',123);
+$db->transactionRollBack();
+$db->transactionCommit();
+            </code>
+        </pre>
+    </div>
 
     <!--------------------------------------------------------------------------------------->
 
-    GDDatabase::Init()->select("SELECT id, NAMES, date_t FROM #__table WHERE id>?", 6);
-    $result = GDDatabase::Init()->getError();
-    echo '<div><h2>getError()</h2>Описание ошибки последнего запроса';
-    echo '<h3>Пример:</h3>';
-    echo 'GDDatabase::Init()->select("SELECT id, names, date_t FROM #__table WHERE id>?", 6);<br>';
-    echo '$result = GDDatabase::Init()->getError();<br /><br />';
-    echo '<h3>Результат:</h3>';
-    <pre><code><?php print_r($result); ?></code></pre>
-    </div>';
+    <div>
+        <h2>simpleQuery() - <span class="h2">Простое выполнение запроса</span></h2>
+
+        <h3>Пример:</h3>
+        <pre>
+            <code class="php">
+$sql = "SELECT id, name_t, date_t FROM #__table WHERE id = 1 OR name_t = 'Степан'";
+$result = GDDatabase::Init()->simpleQuery($sql);
+print_r($result->fetch_all());
+            </code>
+        </pre>
+        <h3>Результат:</h3>
+        <?php $result = GDDatabase::Init()->simpleQuery("SELECT id, name_t, date_t FROM #__table WHERE id=1 OR name_t= 'Степан'"); ?>
+        <pre><code><?php print_r($result->fetch_all()); ?></code></pre>
+    </div>
+    <!--------------------------------------------------------------------------------------->
+
+    <div>
+        <h2>getQueryInfo() - <span class="h2">Получение дополнительной информации о последнем запросе</span></h2>
+
+        <h3>Пример:</h3>
+            <pre>
+                <code class="php">
+GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id>?, 6);
+$result = GDDatabase::Init()->getQueryInfo();
+                </code>
+            </pre>
+        <h3>Результат:</h3>
+            <pre>
+                <code>
+                    <?php
+GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id>?", 6);
+$result = GDDatabase::Init()->getQueryInfo();
+print_r($result);
+                    ?>
+                </code>
+            </pre>
+    </div>
 
     <!--------------------------------------------------------------------------------------->
 
-    GDDatabase::Init()->select("SELECT id, NAMES, date_t FROM #__table WHERE id>?", 6);
-    $result = GDDatabase::Init()->getErrno();
-    echo '<div><h2>getErrno()</h2>Описание номера ошибки последнего запроса';
-    echo '<h3>Пример:</h3>';
-    echo 'GDDatabase::Init()->select("SELECT id, names, date_t FROM #__table WHERE id>?", 6);<br>';
-    echo '$result = GDDatabase::Init()->getErrno();<br /><br />';
-    echo '<h3>Результат:</h3>';
-    echo '<pre>';
-    print_r($result);
-    echo '</pre></div>';
+    <div>
+        <h2>getError() - <span class="h2">Описание ошибки последнего запроса</span></h2>
 
-     <!--------------------------------------------------------------------------------------->
+        <h3>Пример:</h3>
+            <pre>
+                <code class="php">
+GDDatabase::Init()->select("SELECT id, no_name_s, date_t FROM #__table WHERE id > ?", 6);
+$result = GDDatabase::Init()->getError();
+                </code>
+            </pre>
+        <h3>Результат:</h3>
+        <pre>
+            <code>
+            <?php
+            GDDatabase::Init()->select("SELECT id, no_name_s, date_t FROM #__table WHERE id >?", 6);
+            $result = GDDatabase::Init()->getError();
+            print_r($result);
+            ?>
+            </code>
+        </pre>
+    </div>
 
-   GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id >= ?", 3);
+    <!--------------------------------------------------------------------------------------->
+
+    <div>
+        <h2>getErrno() - <span class="h2">Описание номера ошибки последнего запроса</span></h2>
+
+        <h3>Пример:</h3>
+        <pre>
+            <code class="php">
+GDDatabase::Init()->select("SELECT id, names, date_t FROM #__table WHERE id > ?", 6);
+$result = GDDatabase::Init()->getErrno();
+                   </code>
+               </pre>
+        <h3>Результат:</h3>
+        <pre>
+            <code>
+        <?php
+        GDDatabase::Init()->select("SELECT id, NAMES, date_t FROM #__table WHERE id>?", 6);
+        $result = GDDatabase::Init()->getErrno();
+        ?><?php print_r($result); ?>
+            </code>
+        </pre>
+    </div>
+
+    <!--------------------------------------------------------------------------------------->
+
+    <div><h2>showProfiles() - <span class="h2">Показать профилирование запросов</span></h2>
+
+        <h3>Пример:</h3>
+        <pre>
+            <code class="php">
+GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id >= ?", 3);
+GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id < ?", 3);
+$result = GDDatabase::Init()->showProfiles();
+            </code>
+        </pre>
+        <h3>Результат:</h3>
+        <pre>
+            <code>
+<?php
+    GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id >= ?", 3);
     GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id < ?", 3);
     $result = GDDatabase::Init()->showProfiles();
-    echo '<div><h2>showProfiles()</h2>Показать профилирование запросов';
-    echo '<h3>Пример:</h3>';
-    echo 'GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id >= ?", 3);<br>';
-    echo 'GDDatabase::Init()->select("SELECT id, name_t, date_t FROM #__table WHERE id < ?", 3);<br>';
-    echo '$result = GDDatabase::Init()->showProfiles();<br /><br />';
-    echo '<h3>Результат:</h3>';
-    echo '<pre>';
     print_r($result);
-    echo '</pre></div>';
+    ?>
+            </code>
+        </pre>
+    </div>
 
     <!--------------------------------------------------------------------------------------->
 
-    $result = GDDatabase::Init()->getObject();
-    echo '<div><h2>getObject()</h2>Возвращает обьект класса mysqli для нереализованных операций';
-    echo '<h3>Пример:</h3>';
-    echo '$result = GDDatabase::Init()->getObject();<br>';
-    echo '<h3>Результат:</h3>';
-    echo '<pre>';
-    print_r($result);
-    echo '</pre></div>';
-*/
+    <div><h2>getObject() - <span class="h2">Возвращает обьект класса mysqli для нереализованных операций</span></h2>
+
+        <h3>Пример:</h3>
+        <pre>
+            <code class="php">
+$result = GDDatabase::Init()->getObject();
+            </code>
+        </pre>
+        <h3>Результат:</h3>
+        <pre><code><?php print_r(GDDatabase::Init()->getObject());?></code></pre>
+    </div>
+    <?php
+
 } catch (Exception $e) {
     ?>
     <div style="color:#f00">

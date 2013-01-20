@@ -695,9 +695,9 @@ class GDDatabase
      * @throws Exception
      *
      * @example
-     *      string $params[0]      - метод класса БД
-     *      string $params[1.php]      - строка SQL-запроса
-     *      array  $params[2]..[n] - array $method - метод класса БД
+     *      string $params[0]       - метод класса БД
+     *      string $params[1]   - строка SQL-запроса
+     *      string|array  $params[2]..[n]  - данные
      */
     public function getCacheSql()
     {
