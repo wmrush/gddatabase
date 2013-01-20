@@ -1,9 +1,9 @@
-## GDLDatabase - Класс для управления базой данных
+## GDDataBase - Класс для управления базой данных
 
 ## Авторские права:
-* Copiright (c) 2000-2012, Gold Dragon
+* Copiright (c) 2000-2013, Gold Dragon
 * email: illusive@bk.ru
-* www: http://gdlotos.ru
+* www: http://gd.joostina-cms.ru
 
 ## Требования:
 * php > 5.3
@@ -17,9 +17,9 @@
 
 ## Файловая структура системы:
 ```
-database.php - класс для управления базой данных
-dbconfig.ini - файл с настройками базы данных
-dbconfig.php - файл для подключения базы данных и дополнительными настройками
+gddatabase.php - класс для управления базой данных
+gddbconfig.ini - файл с настройками базы данных
+gddbdefine.php - файл для подключения основных констант
 index.php - файл с примерами использования
 ```
 

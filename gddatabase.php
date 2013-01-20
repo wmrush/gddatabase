@@ -1,20 +1,21 @@
 <?php
 /**
- * GDLDatabase - Класс для управления базой данных
+ * GDDatabase - Класс для управления базой данных
  *
- * @package     GDLDatabase
- * @version     1.0
+ * @package     GDDatabase
+ * @version     1.3
  * @author      Gold Dragon <illusive@bk.ru>
  * @link        http://gdlotos.ru
- * @copyright   2000-2012 Gold Dragon
+ * @copyright   2000-2013 Gold Dragon
  * @license     GNU GPL: http://www.gnu.org/licenses/gpl-3.0.html
- * @date        07.09.2012
- * @see         http://wiki.gdlotos.ru/GDLDatabase
+ * @date        19.01.2013
+ * @see         https://code.google.com/p/gddatabase/
+ * @see         https://code.google.com/p/gddatabase/w/list
  *
  * @description Класс для управления базой данных. MySQLi::stmt - подготовленные выражения
  */
 
-class GDLDatabase
+class GDDatabase
 {
     /** @var string - хост */
     private $_db_host;
@@ -80,29 +81,70 @@ class GDLDatabase
      */
     private function __construct()
     {
-        // Подключение конфигурации
-        if (!is_readable(_PATH_DBCONFIG_FILE)) {
-            throw new Exception(_EXC_ISNOT_FILECONFIG);
+        // Проверка константы адреса до файла конфигурации
+        if (!defined('_GDDB_PATH_CONFIG_FILE')) {
+            throw new Exception('You do not specify a constant <b>_GDDB_PATH_CONFIG_FILE</b>.');
         }
-        $config = parse_ini_file(_PATH_DBCONFIG_FILE);
+
+        // Подключение конфигурации
+        if (!is_readable(_GDDB_PATH_CONFIG_FILE)) {
+            throw new Exception(_EXCEP_ISNOT_FILECONFIG);
+        }
+        $config = parse_ini_file(_GDDB_PATH_CONFIG_FILE);
 
         // Сохранение основных настроек
-        $this->_db_host = (isset($config['db_host']) and $config['db_host'] != '') ? $config['db_host'] : ini_get("mysqli.default_host");
-        $this->_db_user = (isset($config['db_user']) and $config['db_user'] != '') ? $config['db_user'] : ini_get("mysqli.default_user");
-        $this->_db_password = (isset($config['db_password']) and $config['db_password'] != '') ? $config['db_password'] : ini_get("mysqli.default_pw");
-        $this->_db_name = (isset($config['db_name'])) ? $config['db_name'] : '';
-        $this->_db_port = (isset($config['db_port']) and $config['db_port'] != '') ? $config['db_port'] : ini_get("mysqli.default_port");
-        $this->_db_socket = (isset($config['db_socket']) and $config['db_socket'] != '') ? $config['db_socket'] : ini_get("mysqli.default_socket");
-        $this->_db_debug = (isset($config['db_debug'])) ? $config['db_debug'] : '';
-        $this->_db_caching = (isset($config['db_caching'])) ? $config['db_caching'] : '';
-        $this->_db_prefix = (isset($config['db_prefix'])) ? $config['db_prefix'] : '';
-        $this->_db_cache_dir = (isset($config['db_cache_dir'])) ? $config['db_cache_dir'] : '';
-        $this->_db_cache_time = (isset($config['db_cache_time'])) ? $config['db_cache_time'] : 0;
+        $this->_db_host = (isset($config['gd_db_host']) and $config['gd_db_host'] != '')
+            ? $config['gd_db_host']
+            : ini_get("mysqli.default_host");
+
+        $this->_db_user = (isset($config['gd_db_user']) and $config['gd_db_user'] != '')
+            ? $config['gd_db_user']
+            : ini_get("mysqli.default_user");
+
+        $this->_db_password = (isset($config['gd_db_password']) and $config['gd_db_password'] != '')
+            ? $config['gd_db_password']
+            : ini_get("mysqli.default_pw");
+
+        $this->_db_name = (isset($config['gd_db_name']))
+            ? $config['gd_db_name']
+            : '';
+
+        $this->_db_port = (isset($config['gd_db_port']) and $config['gd_db_port'] != '')
+            ? $config['gd_db_port']
+            : ini_get("mysqli.default_port");
+
+        $this->_db_socket = (isset($config['gd_db_socket']) and $config['gd_db_socket'] != '')
+            ? $config['gd_db_socket']
+            : ini_get("mysqli.default_socket");
+
+        $this->_db_debug = (isset($config['gd_db_debug']))
+            ? $config['gd_db_debug']
+            : '';
+
+        $this->_db_caching = (isset($config['gd_db_caching']))
+            ? $config['gd_db_caching']
+            : '';
+
+        $this->_db_prefix = (isset($config['gd_db_prefix']))
+            ? $config['gd_db_prefix']
+            : '';
+
+        $this->_db_cache_dir = (isset($config['gd_db_cache_dir']))
+            ? $config['gd_db_cache_dir']
+            : '';
+
+        $this->_db_cache_time = (isset($config['gd_db_cache_time']))
+            ? $config['gd_db_cache_time']
+            : 0;
 
         // Проверка существует ли вообще функция подключения
         if (!function_exists('mysqli_connect')) {
-            throw new Exception(_EXC_MYSQLI_MODULE_NOT);
+            throw new Exception(_EXCEP_MYSQLI_MODULE_NOT);
         }
+
+        // Временно отключаем вывод ошибок
+        $_error = error_reporting();
+        error_reporting(-1);
 
         // Создаём объект базы
         $this->db_resource = new mysqli(
@@ -113,16 +155,21 @@ class GDLDatabase
             $this->_db_port,
             $this->_db_socket);
 
-        // Устанавливаем кодировку
-        $this->db_resource->set_charset('utf8');
-
         if ($this->db_resource->connect_error) {
-            throw new Exception(_EXC_ERROR_CONNECT_DB);
+            throw new Exception(_EXCEP_ERROR_CONNECT_DB);
+        }
+
+        // Возвращаем состояние вывода ошибок
+        error_reporting($_error);
+
+        // Устанавливаем кодировку
+        if (!$this->db_resource->set_charset('utf8')) {
+            throw new Exception(sprintf(_EXCEP_ERROR_LOADING_CHARACTER_SET, $this->db_resource->character_set_name()));
         }
 
         // записываем логи запросов
         if ($this->_db_debug) {
-            $this->db_resource->query('set profiling=1');
+            $this->db_resource->query('set profiling=1.php');
             $this->db_resource->query('set profiling_history_size=100');
         }
     }
@@ -173,7 +220,7 @@ class GDLDatabase
     {
         $params[] = $this->_getParamTypes($bindVars);
         foreach ($bindVars as $key => $param) {
-            $params[] = &$bindVars[$key]; // pass by reference, not value
+            $params[] = & $bindVars[$key];
         }
         return call_user_func_array(array($this->stmp, 'bind_param'), $params);
     }
@@ -193,7 +240,7 @@ class GDLDatabase
         $meta = $this->stmp->result_metadata();
 
         while ($field = $meta->fetch_field()) {
-            $variables[] = &$data[$field->name];
+            $variables[] = & $data[$field->name];
         }
 
         return call_user_func_array(array($this->stmp, 'bind_result'), $variables);
@@ -293,13 +340,43 @@ class GDLDatabase
     /**
      * Замена префикса в SQL-запросе
      *
-     * @param $sql
+     * @param $sql - SQL-запрос
      *
      * @return mixed
      */
     private function _replacePrefix(&$sql)
     {
         $sql = str_replace('#__', $this->_db_prefix, $sql);
+    }
+
+    /**
+     * Проверяем существует ли имя таблицы в базе
+     *
+     * @param null|string $table - имя таблицы
+     *
+     * @return bool
+     */
+    private function _checkTable($table = null)
+    {
+        // Проверяем, а задано ли имя таблицы
+        if (!is_null($table)) {
+            // меняем префикс
+            $this->_replacePrefix($table);
+
+            // Получаем все таблицы в базе
+            $row = $this->select("SHOW TABLES FROM `" . $this->_db_name . "`");
+            $b = preg_match('#"' . $table . '"#', serialize($row));
+
+            // Eсли такая таблица есть
+            if ($b) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
     }
 
     /***************************************************************************
@@ -323,25 +400,25 @@ class GDLDatabase
             $this->stmp->close();
         }
 
-        if (count($arguments) > 1) {
-            $bindVars = $arguments;
-            unset($bindVars[0]);
+        $bindVars = $arguments;
+        unset($bindVars[0]);
 
-            if (substr_count($query, '?') == count($bindVars)) {
+        if (substr_count($query, '?') == count($bindVars)) {
 
-                $this->stmp = $this->db_resource->prepare($query);
-                if (!$this->stmp) {
-                    return false;
-                }
+            $this->stmp = $this->db_resource->prepare($query);
+            if (!$this->stmp) {
+                return false;
+            }
 
+            if (count($bindVars)) {
                 $params = array();
                 $binding = $this->_bindParams($bindVars, $params);
                 if (!$binding) {
                     return false;
                 }
-            } else {
-                throw new Exception(sprintf(_EXC_SQL_ISNOT_DATA, substr_count($query, '?'), count($bindVars)));
             }
+        } else {
+            throw new Exception(sprintf(_EXCEP_SQL_ISNOT_DATA, substr_count($query, '?'), count($bindVars)));
         }
         return true;
     }
@@ -409,12 +486,14 @@ class GDLDatabase
      */
     protected function setQueryInfo()
     {
-        $info = array('affected_rows' => $this->stmp->affected_rows, 'insert_id' => $this->stmp->insert_id, 'num_rows' => $this->stmp->num_rows, 'field_count' => $this->stmp->field_count, 'sqlstate' => $this->stmp->sqlstate,);
+        $info = array('affected_rows' => $this->stmp->affected_rows, 'insert_id' => $this->stmp->insert_id,
+                      'num_rows'      => $this->stmp->num_rows, 'field_count' => $this->stmp->field_count,
+                      'sqlstate'      => $this->stmp->sqlstate,);
         $this->queryInfo = $info;
     }
 
     /**
-     * Extended placeholder %s (array)<br>
+     * Нормализует переданные аргументы
      *
      * @param  $arguments
      *
@@ -455,14 +534,14 @@ class GDLDatabase
     protected function getTypeByVal($variable)
     {
         switch (gettype($variable)) {
-        case 'integer':
-            $type = 'i';
-            break;
-        case 'double':
-            $type = 'd';
-            break;
-        default:
-            $type = 's';
+            case 'integer':
+                $type = 'i';
+                break;
+            case 'double':
+                $type = 'd';
+                break;
+            default:
+                $type = 's';
         }
         return $type;
     }
@@ -521,7 +600,7 @@ class GDLDatabase
      *
      * @param string $query - строка запроса
      *
-     * @return array|bool - возвращаемые значения
+     * @return array|bool   - возвращаемые значения
      */
     public function selectRow($query)
     {
@@ -529,6 +608,28 @@ class GDLDatabase
         $arguments = func_get_args();
 
         return call_user_func_array(array($this, 's_query'), $arguments);
+    }
+
+    /**
+     * Возвращает все значения из таблицы
+     *
+     * @param null|string $table - имя таблицы
+     * @param null|string $field - поле для фильтра
+     * @param null|mixed  $value - значение фильтра
+     *
+     * @return array|bool - двухмерный массив значений, false - при ошибке
+     */
+    public function selectAll($table = null, $field = null, $value = null)
+    {
+        if ($this->_checkTable($table)) {
+            if (!is_null($field)) {
+                return $this->select("SELECT * FROM `" . $table . "` WHERE `" . $field . "` = ?", $value);
+            } else {
+                return $this->select("SELECT * FROM `" . $table . "`");
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -595,7 +696,7 @@ class GDLDatabase
      *
      * @example
      *      string $params[0]      - метод класса БД
-     *      string $params[1]      - строка SQL-запроса
+     *      string $params[1.php]      - строка SQL-запроса
      *      array  $params[2]..[n] - array $method - метод класса БД
      */
     public function getCacheSql()
@@ -640,7 +741,7 @@ class GDLDatabase
             }
         } else {
             // Если нет метода
-            throw new Exception(sprintf(_EXC_UNDEFINED_PROPERTY_CLASS, $method, 'GDLDatabase'));
+            throw new Exception(sprintf(_EXCEP_UNDEFINED_PROPERTY_CLASS, $method, 'GDLDatabase'));
         }
     }
 
@@ -743,7 +844,8 @@ class GDLDatabase
      * Показать профилирование запросов
      * @return mixed
      */
-    public function showProfiles(){
+    public function showProfiles()
+    {
         $result = $this->db_resource->query("show profiles");
         return $result->fetch_all();
     }
