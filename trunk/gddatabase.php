@@ -794,6 +794,24 @@ class GDDatabase
     }
 
     /**
+     * Очистка таблицы (TRUNCATE)
+     *
+     * @param null $table - имя таблицы
+     *
+     * @return bool|mysqli_result - результат
+     */
+    public function clearTable($table = null)
+    {
+        if ($this->_checkTable($table)) {
+            $sql = 'TRUNCATE ' . $table;
+            $this->_replacePrefix($sql);
+            return $this->db_resource->query($sql);
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @param string $query - Простое выполнение запроса
      *
      * @return bool|mysqli_result
