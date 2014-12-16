@@ -1,9 +1,9 @@
 ## GDDataBase - Класс для управления базой данных
 
 ## Авторские права:
-* Copiright (c) 2000-2013, Gold Dragon
+* Copiright (c) 2000-2014, Gold Dragon
 * email: illusive@bk.ru
-* www: http://gd.joostina-cms.ru
+* www: http://gd.lotos-cms.ru
 
 ## Требования:
 * php > 5.3
@@ -11,17 +11,16 @@
 * расширения php - php_mysql.dll, php_mysqli.dll
 
 ## Документация по исходному коду проекта и использованию API
-* Статичная документация: http://wiki.gdlotos.ru/GDLDatabase
-* Поддержка: http://forum.gdlotos.ru
+* Статичная документация: http://wiki.lotos-cms.ru/GDLDatabase
+* Поддержка: http://forum.lotos-cms.ru
 
 
 ## Файловая структура системы:
-```
 gddatabase.php - класс для управления базой данных
 gddbconfig.ini - файл с настройками базы данных
 gddbdefine.php - файл для подключения основных констант
 index.php - файл с примерами использования
-```
+MIT_License.lic - файл лицензии
 
 ## Лицензия
-GNU GPL: http://www.gnu.org/licenses/gpl-3.0.html.
+MIT License: /MIT_License.lic

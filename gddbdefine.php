@@ -3,12 +3,12 @@
  * GDDatabase - Класс для управления базой данных
  *
  * @package     GDDatabase
- * @version     1.3
+ * @version     1.4
  * @author      Gold Dragon <illusive@bk.ru>
- * @link        http://gdlotos.ru
- * @copyright   2000-2013 Gold Dragon
- * @license     GNU GPL: http://www.gnu.org/licenses/gpl-3.0.html
- * @date        19.01.2013
+ * @link        http://lotos-cms.ru
+ * @copyright   2000-2014 Gold Dragon
+ * @license     MIT License: /MIT_License.lic
+ * @date        16.12.2014
  * @see         https://code.google.com/p/gddatabase/
  * @see         https://code.google.com/p/gddatabase/w/list
  *
